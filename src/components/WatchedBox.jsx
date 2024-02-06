@@ -1,5 +1,27 @@
 import { useState } from "react";
 
+export default function WatchedBox({ tempWatchedData, average }) {
+  const [watched, setWatched] = useState(tempWatchedData);
+  const [isOpen2, setIsOpen2] = useState(true);
+
+  return (
+    <div className="box">
+      <button
+        className="btn-toggle"
+        onClick={() => setIsOpen2((open) => !open)}
+      >
+        {isOpen2 ? "–" : "+"}
+      </button>
+      {isOpen2 && (
+        <>
+          <WatchedSummary watched={watched} average={average} />
+          <WatchedMovieList watched={watched} />
+        </>
+      )}
+    </div>
+  );
+}
+
 function WatchedSummary({ watched, average }) {
   const avgImdbRating = average(watched.map((movie) => movie.imdbRating));
   const avgUserRating = average(watched.map((movie) => movie.userRating));
@@ -25,28 +47,6 @@ function WatchedSummary({ watched, average }) {
           <span>{avgRuntime} min</span>
         </p>
       </div>
-    </div>
-  );
-}
-
-export default function WatchedBox({ tempWatchedData, average }) {
-  const [watched, setWatched] = useState(tempWatchedData);
-  const [isOpen2, setIsOpen2] = useState(true);
-
-  return (
-    <div className="box">
-      <button
-        className="btn-toggle"
-        onClick={() => setIsOpen2((open) => !open)}
-      >
-        {isOpen2 ? "–" : "+"}
-      </button>
-      {isOpen2 && (
-        <>
-          <WatchedSummary watched={watched} average={average} />
-          <WatchedMovieList watched={watched} />
-        </>
-      )}
     </div>
   );
 }
