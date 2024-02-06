@@ -1,5 +1,8 @@
 import Navbar from "./components/Navbar";
 import Main from "./components/Main";
+import { Logo, Search, NumResults } from "./components/Navbar";
+import ListBox from "./components/ListBox";
+import WatchedBox from "./components/WatchedBox";
 import { useState } from "react";
 
 const tempMovieData = [
@@ -52,18 +55,47 @@ const tempWatchedData = [
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
+function MovieList({ movies }) {
+  return (
+    <ul className="list">
+      {movies?.map((movie) => (
+        <Movie movie={movie} key={movie.id} />
+      ))}
+    </ul>
+  );
+}
+
+function Movie({ movie }) {
+  return (
+    <li key={movie.imdbID}>
+      <img src={movie.Poster} alt={`${movie.Title} poster`} />
+      <h3>{movie.Title}</h3>
+      <div>
+        <p>
+          <span>🗓</span>
+          <span>{movie.Year}</span>
+        </p>
+      </div>
+    </li>
+  );
+}
+
 export default function App() {
   const [movies, setMovies] = useState(tempMovieData);
 
   return (
     <>
-      <Navbar movies={movies} />
-      <Main
-        movies={movies}
-        tempMovieData={tempMovieData}
-        tempWatchedData={tempWatchedData}
-        average={average}
-      />
+      <Navbar>
+        <Logo />
+        <Search />
+        <NumResults movies={movies} />
+      </Navbar>
+      <Main>
+        <ListBox>
+          <MovieList movies={movies} />
+        </ListBox>
+        <WatchedBox tempWatchedData={tempWatchedData} average={average} />
+      </Main>
     </>
   );
 }
