@@ -54,7 +54,7 @@ const average = (arr) =>
 const KEY = "a41689a3";
 
 export default function App() {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState("inception");
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -186,6 +186,7 @@ function Movie({ movie, onSelectMovie }) {
 function MovieDetails({ selectedId, onCloseMovie, onAddWatched }) {
   const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [userRating, setUserRating] = useState(" ");
 
   const {
     Title: title,
@@ -208,8 +209,10 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched }) {
       poster,
       imdbRating: Number(imdbRating),
       runtime: Number(runtime.split(" ").at(0)),
+      userRating,
     };
     onAddWatched(newWatchedMovie);
+    onCloseMovie();
   }
 
   useEffect(
@@ -220,7 +223,6 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched }) {
           `http://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`
         );
         const data = await res.json();
-        console.log(data);
         setMovie(data);
         setIsLoading(false);
       }
@@ -254,11 +256,13 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched }) {
           </header>
           <section>
             <div className="rating">
-              <StarRating maxRating={10} size={24} />
+              <StarRating defaultRating={5} maxRating={10} size={24} />
 
-              <button className="btn-add" onClick={handleAdd}>
-                + Add to list
-              </button>
+              {userRating > 0 && (
+                <button className="btn-add" onClick={handleAdd}>
+                  + Add to list
+                </button>
+              )}
             </div>
             <p>
               <em>{plot}</em>
